@@ -1,6 +1,7 @@
 package com.company;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.List;
@@ -16,8 +17,10 @@ public class Connect implements Runnable{
     public void run() {
         try {
             ServerSocket serverSocket = new ServerSocket(port);
-            String messageStart = String.format("server started: port %d", port);
+            System.out.println("Local host: " + InetAddress.getLocalHost().getHostAddress());
+            String messageStart = String.format("port: %d", port);
             System.out.println(messageStart);
+            System.out.println("server started");
             System.out.println();
             while (true) {
                 Socket socket = serverSocket.accept();      //ждать, пока не появится новое подключение

@@ -22,7 +22,7 @@ public class Server implements IConst {
 
     private void printOnStart() {
         System.out.println("--------------------------------------------------------------");
-        System.out.println("questions server for the game ");
+        System.out.println("question server for the game ");
         System.out.println("\"Who Wants to Be a Millionaire?\"");
         System.out.println("ver." + VERSION);
         System.out.println(".......");

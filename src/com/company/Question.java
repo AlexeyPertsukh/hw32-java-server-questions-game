@@ -1,25 +1,60 @@
-
 package com.company;
 
-import org.json.JSONObject;
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class Question {
-    private String question;
-    private String correctAnswer;
-    private List<String> wrongAnswers;
+    public static final int AMOUNT_ANSWERS = 4;
 
-    public Question(String question, String correctAnswer, String... wrongAnswers) {
-        this.question = question;
+    private static final String MESSAGE_EXCEPTION_JSON_CONVERT = "Invalid json format for created";
+    private static final String FORMAT_MESSAGE_EXCEPTION_WRONG_ANSWERS = "Invalid numbers answers (valid values is %d): %s";
+
+    private final String strQuestion;
+    private final String correctAnswer;
+    private final List<String> wrongAnswers;
+
+    public Question(String strQuestion, String correctAnswer, String... wrongAnswers) throws QuestionException {
+        validateWrongAnswers(wrongAnswers);
+        this.strQuestion = strQuestion;
         this.correctAnswer = correctAnswer;
         this.wrongAnswers = new ArrayList<>(Arrays.asList(wrongAnswers));
     }
 
-    public String getQuestion() {
+    public static Question of(String jsonString) throws QuestionException {
+        Gson gson = new Gson();
+        Question question;
+        try{
+            question = gson.fromJson(jsonString, Question.class);
+        } catch (JsonSyntaxException ex) {
+            throw new QuestionException(MESSAGE_EXCEPTION_JSON_CONVERT);
+       }
+
+        validateWrongAnswers(question.getWrongAnswers());
         return question;
+
+    }
+
+    private static void validateWrongAnswers(int amount) {
+        if(amount != AMOUNT_ANSWERS - 1) {
+            String message = String.format(FORMAT_MESSAGE_EXCEPTION_WRONG_ANSWERS, AMOUNT_ANSWERS - 1, amount);
+            throw new QuestionException(message);
+        }
+    }
+
+    private static void validateWrongAnswers(String[] wrongAnswers) {
+        validateWrongAnswers(wrongAnswers.length);
+    }
+
+    private static void validateWrongAnswers(List<String> listWrongAnswers) {
+        validateWrongAnswers(listWrongAnswers.size());
+    }
+
+    public String getStrQuestion() {
+        return strQuestion;
     }
 
     public String getCorrectAnswer() {
@@ -32,15 +67,19 @@ public class Question {
 
     @Override
     public String toString() {
-        String string = String.format("%s;%s", question, correctAnswer);
-        for (String wrongAnswer : wrongAnswers) {
-            string += ";" + wrongAnswer;
-        }
-        return string;
+        return "Question{" +
+                "strQuestion='" + strQuestion + '\'' +
+                ", correctAnswer='" + correctAnswer + '\'' +
+                ", wrongAnswers=" + wrongAnswers.toString() +
+                '}';
     }
 
     public String toJson() {
-        JSONObject jsonObject = new JSONObject(this);
-        return jsonObject.toString();
+        Gson gson = new Gson();
+        return gson.toJson(this);
+    }
+
+    public boolean checkCorrectAnswer(String answer) {
+        return correctAnswer.equals(answer);
     }
 }
