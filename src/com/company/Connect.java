@@ -18,7 +18,7 @@ public class Connect implements Runnable{
         try {
             ServerSocket serverSocket = new ServerSocket(port);
             System.out.println("Local host: " + InetAddress.getLocalHost().getHostAddress());
-            String messageStart = String.format("port: %d", port);
+            String messageStart = String.format("port: %d ", port);
             System.out.println(messageStart);
             System.out.println("server started");
             System.out.println();
