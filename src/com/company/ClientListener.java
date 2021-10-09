@@ -2,8 +2,11 @@
 package com.company;
 
 import java.io.IOException;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -57,10 +60,19 @@ public class ClientListener implements Runnable, IConst{
     }
 
     private void sendQuestionsToClient() {
+        ArrayList<String> outStrings = new ArrayList<>();
         for (Question question : questions) {
-            printWriter.println(question.toJson());
+            outStrings.add(question.toJson());
         }
-        printWriter.flush();
+
+        try {
+            ObjectOutputStream out = new ObjectOutputStream(clientSocket.getOutputStream());
+            out.writeObject(outStrings);
+        } catch (IOException e) {
+            System.out.println("failed write to client");
+        }
+
+        System.out.println("send to client strings: " + outStrings.size());
     }
 
 }
