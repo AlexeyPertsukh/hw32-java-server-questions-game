@@ -41,16 +41,13 @@ public class ClientListener implements Runnable, IConst{
             System.out.println("input: " + query);
 
             if (query.equals(QUERY)) {
-
                 try {
                     questions = Csv.readQuestions("*");
                 } catch (CsvException ex) {
                     System.out.println(ex.getMessage());
                     break;
                 }
-
                 sendQuestionsToClient();
-                System.out.println("output: questions");
             } else {
                 System.out.println("<unknown command>");
             }
@@ -72,7 +69,7 @@ public class ClientListener implements Runnable, IConst{
             System.out.println("failed write to client");
         }
 
-        System.out.println("send to client strings: " + outStrings.size());
+        System.out.println("send strings to client`: " + outStrings.size());
     }
 
 }
